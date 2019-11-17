@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "FILL ME BACK IN",
+    password: "Cigez8are",
     database: "bamazon"
 });
 
@@ -23,7 +23,7 @@ connection.connect(function (err) {
     start();
 });
 
-// function which prompts the user for what action they should take
+// This just displays the initial product list
 function start() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
@@ -42,6 +42,7 @@ function start() {
     });
 }
 
+//Here's where the user is prompted to select an action
 function startPrompt() {
     inquirer
         .prompt([
@@ -65,6 +66,7 @@ function startPrompt() {
         });
 }
 
+// Allows the user to select a product to buy
 function buyPrompt() {
     inquirer
         .prompt([
@@ -98,6 +100,7 @@ function buyPrompt() {
         });
 }
 
+// Checks to see if the product is available
 function checkPurchase(itemID, qty) {
 
     connection.query("SELECT * FROM products WHERE ?",
@@ -118,10 +121,11 @@ function checkPurchase(itemID, qty) {
                 startPrompt();
 
             }
-            //console.log(res);
+
         });
 }
 
+// Completes a purchase, updating the db and displaying the total.
 function finalizePurchase(itemID, qty, stock, price){
 
     let newStock = stock - qty;
@@ -140,7 +144,7 @@ function finalizePurchase(itemID, qty, stock, price){
         function(error) {
             if (error) throw err;
             
-            console.log("Purchase successful! Your total is $" + totalCost);
+            console.log("Purchase successful! Your total is $" + totalCost.toFixed(2));
             startPrompt();
         }
     );
